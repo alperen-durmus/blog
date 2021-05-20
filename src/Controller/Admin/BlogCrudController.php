@@ -5,14 +5,11 @@ namespace App\Controller\Admin;
 use App\Entity\Blog;
 use App\Entity\Tag;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\HttpFoundation\Request;
 
 class BlogCrudController extends AbstractCrudController
 {
@@ -41,7 +38,10 @@ class BlogCrudController extends AbstractCrudController
             BooleanField::new('status'),
             DateTimeField::new('created_at'),
             DateTimeField::new('updated_at'),
-            // CollectionField::new('Tags'),
+            AssociationField::new('categories'),
+            AssociationField::new('tags'),
         ];
+
+
     }
 }
