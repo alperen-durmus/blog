@@ -19,22 +19,28 @@ class BlogRepository extends ServiceEntityRepository
         parent::__construct($registry, Blog::class);
     }
 
-    // /**
-    //  * @return Blog[] Returns an array of Blog objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param $value
+     * @return [] Blog Returns an array of Blog objects
+     */
+    public function findByTitleOrContentField($value)
     {
         return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
+            ->where("b.title LIKE :val")
+            ->orWhere("b.content LIKE :val")
+            ->andWhere("b.status = 1")
+            ->setParameter('val', "%$value%")
+            ->orderBy("b.created_at", "desc")
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
+
+    public function findSelfBlogs($user) {
+        return $this->createQueryBuilder('b')
+            ->where('b.author = :user')
+            ->setParameter('user', $user)
+            ->orderBy("b.created_at","desc");
+    }
 
     /*
     public function findOneBySomeField($value): ?Blog

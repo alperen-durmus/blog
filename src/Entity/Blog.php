@@ -59,6 +59,11 @@ class Blog
      */
     private $tags;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -130,6 +135,11 @@ class Blog
         return $this;
     }
 
+    public function getAuthorName(): ?string
+    {
+        return $this->author->getUsername();
+    }
+
     public function getAuthor(): ?User
     {
         return $this->author;
@@ -190,5 +200,15 @@ class Blog
         return $this;
     }
 
-    
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
 }
