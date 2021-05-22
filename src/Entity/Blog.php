@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=BlogRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class Blog
 {
@@ -63,6 +64,7 @@ class Blog
      * @ORM\Column(type="string", length=255)
      */
     private $image;
+
 
     public function __construct()
     {
@@ -211,4 +213,24 @@ class Blog
 
         return $this;
     }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function prePersist()
+    {
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function postPersist()
+    {
+        $this->updated_at = new \DateTime();
+    }
+
+
+
 }

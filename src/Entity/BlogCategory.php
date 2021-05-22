@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=BlogCategoryRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class BlogCategory
 {
@@ -114,5 +115,22 @@ class BlogCategory
         }
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function prePersist()
+    {
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function postPersist()
+    {
+        $this->updated_at = new \DateTime();
     }
 }

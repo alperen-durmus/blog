@@ -26,7 +26,8 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('Admin')
-            ->renderContentMaximized();
+            ->renderContentMaximized()
+            ->disableUrlSignatures();
     }
 
     public function configureMenuItems(): iterable

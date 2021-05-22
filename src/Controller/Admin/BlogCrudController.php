@@ -3,9 +3,14 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Blog;
+use App\Entity\BlogCategory;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -31,6 +36,13 @@ class BlogCrudController extends AbstractCrudController
         return $blog;
     }
 
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $entityInstance->setUpdatedAt(new \DateTime());
+        $entityManager->persist($entityInstance);
+        $entityManager->flush();
+    }
+
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
         if ($this->isGranted("ROLE_ADMIN")) {
@@ -39,17 +51,16 @@ class BlogCrudController extends AbstractCrudController
         return  $this->getDoctrine()->getManager()->getRepository(Blog::class)->findSelfBlogs($this->getUser());
     }
 
-
-
     public function configureFields(string $pageName): iterable
     {
         return [
             TextField::new('title'),
             TextEditorField::new('content'),
-            ImageField::new('image')->setUploadDir("public/image/blog/"),
+            ImageField::new('image')->setUploadDir("public/image/blog/")->setBasePath("/image/blog/"),
             BooleanField::new('status'),
-            DateTimeField::new('created_at')->setValue(date("Y-m-d H:i:s")),
-            DateTimeField::new('updated_at')->setFormattedValue(date("Y-m-d H:i:s")),
+            TextField::new('author'),
+            DateTimeField::new('created_at')->hideOnForm(),
+            DateTimeField::new('updated_at')->hideOnForm(),
             AssociationField::new('categories'),
             AssociationField::new('tags'),
         ];
