@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -58,9 +59,10 @@ class BlogCrudController extends AbstractCrudController
             TextEditorField::new('content'),
             ImageField::new('image')->setUploadDir("public/image/blog/")->setBasePath("/image/blog/"),
             BooleanField::new('status'),
-            TextField::new('author'),
+            TextField::new('author')->hideOnForm(),
             DateTimeField::new('created_at')->hideOnForm(),
             DateTimeField::new('updated_at')->hideOnForm(),
+            AssociationField::new('comments')->hideOnForm(),
             AssociationField::new('categories'),
             AssociationField::new('tags'),
         ];

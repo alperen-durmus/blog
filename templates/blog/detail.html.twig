@@ -24,41 +24,35 @@
         <div class="card my-4">
             <h5 class="card-header">Leave a Comment:</h5>
             <div class="card-body">
-                <form>
-                    <div class="form-group"><textarea class="form-control" rows="3"></textarea></div>
-                    <button class="btn btn-primary" type="submit">Submit</button>
+                <form action="{{ path('blog_detail', {id: blog.id}) }}" method="POST">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Name Surname" name="owner" />
+                    </div>
+                    <div class="form-group"><textarea class="form-control" placeholder="Comment" name="content" rows="3"></textarea></div>
+                    <button class="btn btn-primary float-right" type="submit">Share</button>
                 </form>
             </div>
-        </div>
-        <!-- Single comment-->
-        <div class="media mb-4">
-            <img class="d-flex mr-3 rounded-circle" src="https://via.placeholder.com/50x50" alt="..." />
-            <div class="media-body">
-                <h5 class="mt-0">Commenter Name</h5>
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+            <div class="card-footer">
+
+                {% if errors %}
+                    {% for error in errors %}
+                        <li>{{ error.message }}</li>
+                    {% endfor %}
+                {% endif %}
+
             </div>
         </div>
-        <!-- Comment with nested comments-->
-        <div class="media mb-4">
-            <img class="d-flex mr-3 rounded-circle" src="https://via.placeholder.com/50x50" alt="..." />
-            <div class="media-body">
-                <h5 class="mt-0">Commenter Name</h5>
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                <div class="media mt-4">
+        {% if comments %}
+            {% for comment in comments  %}
+                <div class="media mb-4">
                     <img class="d-flex mr-3 rounded-circle" src="https://via.placeholder.com/50x50" alt="..." />
                     <div class="media-body">
-                        <h5 class="mt-0">Commenter Name</h5>
-                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                        <h5 class="mt-0">{{ comment.owner }}</h5>
+                        {{ comment.content }}
                     </div>
                 </div>
-                <div class="media mt-4">
-                    <img class="d-flex mr-3 rounded-circle" src="https://via.placeholder.com/50x50" alt="..." />
-                    <div class="media-body">
-                        <h5 class="mt-0">Commenter Name</h5>
-                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                    </div>
-                </div>
-            </div>
-        </div>
+            {% endfor %}
+        {% endif %}
+
     </div>
 {% endblock %}
