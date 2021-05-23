@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Blog;
 use App\Entity\BlogCategory;
 use App\Entity\Comment;
-use App\Repository\BlogCategoryRepository;
 use App\Repository\BlogRepository;
 use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -71,7 +70,7 @@ class BlogController extends AbstractController
     /**
      * @Route("/posts/category/{id}", name="category")
      */
-    public function category(BlogCategory $category, BlogCategoryRepository $blogCategoryRepository): Response
+    public function category(BlogCategory $category): Response
     {
         return $this->render('blog/index.html.twig', [
             'blogs' => $category->getBlogs()->filter(function (Blog $blog) {
