@@ -42,7 +42,6 @@ class DashboardController extends AbstractDashboardController
                     MenuItem::linkToCrud('List', 'fa fa-list', Tag::class),
                     MenuItem::linkToCrud('New', 'fa fa-plus', Tag::class)->setAction('new'),
                 ]);
-                
                 yield MenuItem::section('Other')->setPermission('ROLE_ADMIN');
                 yield MenuItem::linkToCrud('Authors', 'fas fa-man', User::class)->setPermission('ROLE_ADMIN');
             }

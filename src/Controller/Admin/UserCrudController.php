@@ -45,8 +45,8 @@ class UserCrudController extends AbstractCrudController
         return [
             Field::new('username')->hideOnForm(),
             ArrayField::new('roles'),
-            AssociationField::new('blogs')->hideOnForm()->hideOnDetail(),
-            ArrayField::new("blogs")->hideOnIndex()->hideOnForm(),
+            AssociationField::new('blogs')->onlyOnIndex(),
+            ArrayField::new("blogs")->onlyOnDetail(),
         ];
     }
 

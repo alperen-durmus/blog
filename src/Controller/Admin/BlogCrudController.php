@@ -68,4 +68,9 @@ class BlogCrudController extends AbstractCrudController
             AssociationField::new('tags'),
         ];
     }
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL);
+    }
 }
