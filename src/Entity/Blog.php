@@ -272,6 +272,5 @@ class Blog
     {
         return $this->getTitle();
     }
-
-
 }
+

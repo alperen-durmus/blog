@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Blog;
 use App\Entity\BlogCategory;
+use App\Entity\Comment;
 use App\Entity\Tag;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -34,7 +35,7 @@ class DashboardController extends AbstractDashboardController
     {
             yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
             yield MenuItem::linkToCrud('Blog', 'fas fa-align-center', Blog::class);
-
+            yield MenuItem::linkToCrud("Comments", "fas fa-comments", Comment::class);
             // ROLE_ADMIN
             if ($this->isGranted('ROLE_ADMIN')) {
                 yield MenuItem::linkToCrud('Category', 'fas fa-list', BlogCategory::class);

@@ -60,7 +60,7 @@ class BlogCrudController extends AbstractCrudController
             TextEditorField::new('content'),
             ImageField::new('image')->setUploadDir("public/image/blog/")->setBasePath("/image/blog/"),
             BooleanField::new('status'),
-            TextField::new('author')->hideOnForm(),
+            AssociationField::new('author')->hideOnForm(),
             DateTimeField::new('created_at')->hideOnForm(),
             DateTimeField::new('updated_at')->hideOnForm(),
             AssociationField::new('comments')->hideOnForm(),
