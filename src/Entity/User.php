@@ -43,9 +43,15 @@ class User implements UserInterface
      */
     private $blogs;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Log::class, mappedBy="user")
+     */
+    private $logs;
+
     public function __construct()
     {
         $this->blogs = new ArrayCollection();
+        $this->logs = new ArrayCollection();
     }
 
     public function __toString()
@@ -153,6 +159,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($blog->getAuthor() === $this) {
                 $blog->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Log[]
+     */
+    public function getLogs(): Collection
+    {
+        return $this->logs;
+    }
+
+    public function addLog(Log $log): self
+    {
+        if (!$this->logs->contains($log)) {
+            $this->logs[] = $log;
+            $log->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLog(Log $log): self
+    {
+        if ($this->logs->removeElement($log)) {
+            // set the owning side to null (unless already changed)
+            if ($log->getUser() === $this) {
+                $log->setUser(null);
             }
         }
 

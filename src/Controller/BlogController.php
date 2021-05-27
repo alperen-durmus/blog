@@ -7,6 +7,7 @@ use App\Entity\BlogCategory;
 use App\Entity\Comment;
 use App\Repository\BlogRepository;
 use App\Repository\CommentRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,8 +19,10 @@ class BlogController extends AbstractController
     /**
      * @Route("/", name="blog")
      */
-    public function index(BlogRepository $blogRepository): Response
+    public function index(BlogRepository $blogRepository, LoggerInterface $logger, Request $request): Response
     {
+
+        $logger->info("hi guys");
         $blogs = $blogRepository->findBy(["status" => 1], ['created_at' => 'DESC']);
 
         return $this->render('blog/index.html.twig', [
