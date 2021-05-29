@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Blog;
 use App\Entity\BlogCategory;
 use App\Entity\Comment;
+use App\Entity\Log;
 use App\Entity\Tag;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -43,8 +44,9 @@ class DashboardController extends AbstractDashboardController
                     MenuItem::linkToCrud('List', 'fa fa-list', Tag::class),
                     MenuItem::linkToCrud('New', 'fa fa-plus', Tag::class)->setAction('new'),
                 ]);
-                yield MenuItem::section('Other')->setPermission('ROLE_ADMIN');
-                yield MenuItem::linkToCrud('Authors', 'fas fa-man', User::class)->setPermission('ROLE_ADMIN');
+                yield MenuItem::section('Other');
+                yield MenuItem::linkToCrud('Authors', 'fas fa-user-edit', User::class);
+                yield MenuItem::linkToCrud('Log', 'fas fa-clipboard-list', Log::class);
             }
     }
     

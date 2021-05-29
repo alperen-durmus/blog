@@ -1,28 +1,25 @@
 monolog:
     channels: ["orm"]
     handlers:
-        main:
-            type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
-            channels: ["!event"]
+#        main:
+#            type: stream
+#            path: "%kernel.logs_dir%/%kernel.environment%.log"
+#            level: debug
+#            channels: ["!event"]
 
         OrmLogger:
             type: service
             id: orm_handler
+            channels: [ "orm" ]
+            level: info
+            priority: 0
 
-        # uncomment to get logging in your browser
-        # you may have to allow bigger header sizes in your Web server configuration
-        #firephp:
-        #    type: firephp
-        #    level: info
-        #chromephp:
-        #    type: chromephp
-        #    level: info
-        console:
-            type: console
-            process_psr_3_messages: false
-            channels: ["!event", "!doctrine", "!console"]
+
+
+#        console:
+#            type: console
+#            process_psr_3_messages: false
+#            channels: ["!event", "!doctrine", "!console"]
 services:
     orm_handler:
         class: App\Logger\OrmLogger

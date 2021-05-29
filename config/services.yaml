@@ -27,9 +27,15 @@ services:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
 
-    App\Log\CustomLogger:
-        arguments: ['@logger']
+    orm_handler:
+        class: App\Logger\OrmLogger
+        arguments: ['@doctrine.orm.entity_manager']
         tags:
-            - { name: monolog.logger.orm, channel: orm }
+            - { name: monolog.logger.orm, channel: orm  }
+
+    App\EventSubscriber\UserLogSubscriber:
+        tags:
+            - {name: 'doctrine.event_subscriber'}
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

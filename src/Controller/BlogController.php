@@ -22,8 +22,11 @@ class BlogController extends AbstractController
     public function index(BlogRepository $blogRepository, LoggerInterface $logger, Request $request): Response
     {
 
-        $logger->info("hi guys");
         $blogs = $blogRepository->findBy(["status" => 1], ['created_at' => 'DESC']);
+
+        $logger->info("test {name}", [
+            "name" => "alperen"
+        ]);
 
         return $this->render('blog/index.html.twig', [
             'blogs' => $blogs,

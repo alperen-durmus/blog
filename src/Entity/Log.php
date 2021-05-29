@@ -19,6 +19,7 @@ class Log
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="logs")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
@@ -28,14 +29,14 @@ class Log
     private $action;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $created_at;
-
-    /**
      * @ORM\Column(type="text")
      */
     private $detail;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $created_at;
 
     public function getId(): ?int
     {
@@ -66,18 +67,6 @@ class Log
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $created_at): self
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
     public function getDetail(): ?string
     {
         return $this->detail;
@@ -86,6 +75,18 @@ class Log
     public function setDetail(string $detail): self
     {
         $this->detail = $detail;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }
