@@ -41,7 +41,7 @@ class UserLogSubscriber implements EventSubscriber
 
             $this->logger->info("Added new {table} by {username} at {datetime}", [
                 "table" => $table,
-                "username" => $user->getUsername(),
+                "username" => $user ? $user->getUsername() : false,
                 "datetime" => $datetime->format("Y-m-d H:i:s"),
                 "action" => "add"
             ]);
@@ -57,7 +57,7 @@ class UserLogSubscriber implements EventSubscriber
 
             $this->logger->info("Deleted {table} by {username} at {datetime}", [
                 "table" => $table,
-                "username" => $user->getUsername(),
+                "username" => $user ? $user->getUsername() : false,
                 "datetime" => $datetime->format("Y-m-d H:i:s"),
                 "action" => "delete"
             ]);
@@ -73,7 +73,7 @@ class UserLogSubscriber implements EventSubscriber
 
             $this->logger->info("Updated {table} by {username} at {datetime}", [
                 "table" => $table,
-                "username" => $user->getUsername(),
+                "username" => $user ? $user->getUsername() : false,
                 "datetime" => $datetime->format("Y-m-d H:i:s"),
                 "action" => "update"
             ]);
@@ -97,13 +97,14 @@ class UserLogSubscriber implements EventSubscriber
      */
     private function getUser(): ?User
     {
-        $user = "";
+        $user = null;
         if ($this->session->has('_security_main')) {
             /** @var AbstractToken $security */
             $security = unserialize($this->session->get("_security_main"));
             /** @var User $user */
             $user = $security->getUser();
         }
+
         return $user;
     }
 }

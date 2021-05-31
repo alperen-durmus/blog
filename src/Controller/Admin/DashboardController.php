@@ -8,6 +8,7 @@ use App\Entity\Comment;
 use App\Entity\Log;
 use App\Entity\Tag;
 use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -21,7 +22,15 @@ class DashboardController extends AbstractDashboardController
      */
     public function index(): Response
     {
-        return parent::index();
+        $blog = $this->getDoctrine()->getRepository(Blog::class)->count([]);
+        $comment = $this->getDoctrine()->getRepository(Comment::class)->findBy(["parent" => null]);
+        $author = $this->getDoctrine()->getRepository(User::class)->count([]);
+
+        return $this->render('bundles/EasyAdminBundle/dashboard.html.twig', [
+            "blog" => $blog,
+            "comment" => count($comment),
+            "author" => $author,
+        ]);
     }
 
     public function configureDashboard(): Dashboard
@@ -30,6 +39,12 @@ class DashboardController extends AbstractDashboardController
             ->setTitle('Admin')
             ->renderContentMaximized()
             ->disableUrlSignatures();
+    }
+
+    public function configureAssets(): Assets
+    {
+        return parent::configureAssets()
+            ->addCssFile("css/admin.css");
     }
 
     public function configureMenuItems(): iterable

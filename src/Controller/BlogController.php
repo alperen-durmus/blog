@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Entity\Blog;
 use App\Entity\BlogCategory;
 use App\Entity\Comment;
+use App\Entity\Subscribers;
 use App\Repository\BlogRepository;
 use App\Repository\CommentRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,10 +27,6 @@ class BlogController extends AbstractController
 
         $blogs = $blogRepository->findBy(["status" => 1], ['created_at' => 'DESC']);
 
-        $logger->info("test {name}", [
-            "name" => "alperen"
-        ]);
-
         return $this->render('blog/index.html.twig', [
             'blogs' => $blogs,
             'title' => "All Posts",
@@ -41,11 +40,13 @@ class BlogController extends AbstractController
     public function detail($id, Blog $blog, CommentRepository $commentRepository, Request $request, ValidatorInterface $validator): Response
     {
         $comments = $commentRepository->findBy(["blog" => $blog]);
+        $nested_comments = $commentRepository->getNestedComments();
 
         $response_data = [
             'blog' => $blog,
             'title' => $blog->getTitle(),
             'comments' => $comments,
+            'nested_comments' => $nested_comments,
             'errors' => false,
         ];
 
@@ -87,7 +88,7 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/blog/search", name="search")
+     * @Route("/blog/search", name="search", methods={"POST"})
      */
     public function search(BlogRepository $blogRepository, Request $request): Response
     {
@@ -99,4 +100,6 @@ class BlogController extends AbstractController
             'title' => $searchKey,
         ]);
     }
+
+
 }

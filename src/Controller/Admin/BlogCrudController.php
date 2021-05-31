@@ -61,9 +61,11 @@ class BlogCrudController extends AbstractCrudController
             AssociationField::new('author')->hideOnForm(),
             DateTimeField::new('created_at')->hideOnForm(),
             DateTimeField::new('updated_at')->hideOnForm(),
+            AssociationField::new('categories')->onlyOnForms()->autocomplete(),
+            ArrayField::new('categories')->hideOnForm(),
+            AssociationField::new('tags')->onlyOnForms(),
+            ArrayField::new('tags')->hideOnForm(),
             AssociationField::new('comments')->hideOnForm(),
-            AssociationField::new('categories'),
-            AssociationField::new('tags'),
         ];
     }
     public function configureActions(Actions $actions): Actions

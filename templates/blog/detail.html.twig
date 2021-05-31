@@ -43,13 +43,27 @@
         </div>
         {% if comments %}
             {% for comment in comments  %}
-                <div class="media mb-4">
-                    <img class="d-flex mr-3 rounded-circle" src="https://via.placeholder.com/50x50" alt="..." />
-                    <div class="media-body">
-                        <h5 class="mt-0">{{ comment.owner }}</h5>
-                        {{ comment.content }}
+                {% if comment.parent == null %}
+                    {% set parent_id = comment.id %}
+                    <div class="media mb-4">
+                        <img class="d-flex mr-3 rounded-circle" src="https://via.placeholder.com/50x50" alt="..." />
+                        <div class="media-body">
+                            <h5 class="mt-0">{{ comment.owner }}</h5>
+                            {{ comment.content }}
+                            {% for nested in nested_comments %}
+                                {% if nested.parent == comment %}
+                                <div class="media mt-4">
+                                    <img class="d-flex mr-3 rounded-circle" src="https://via.placeholder.com/50x50" alt="..." />
+                                    <div class="media-body">
+                                        <h5 class="mt-0">{{ nested.owner }}</h5>
+                                        {{ nested.content }}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
+                {% endif %}
             {% endfor %}
         {% endif %}
 

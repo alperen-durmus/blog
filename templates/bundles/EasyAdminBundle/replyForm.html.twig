@@ -1,6 +1,23 @@
 {% extends "@EasyAdmin/page/content.html.twig" %}
-{% block page_title 'Business Stats' %}
+{% block page_title 'Comment' %}
+
 
 {% block page_content %}
-    {{ form(form) }}
+
+    <h5> {{ parent.owner }} | <small> {{ parent.getCreatedAt()|date('Y-m-d') }}</small> </h5>
+
+    <p>
+        {{ parent.content }}
+    </p>
+    {% use 'form_div_layout.html.twig' %}
+    <hr>
+    {{ form_start(form) }}
+    <div class="form-group">
+        <div class="form-label">
+            {{ form_label(form.content) }}
+        </div>
+        {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    {{ form_end(form) }}
 {% endblock %}

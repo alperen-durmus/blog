@@ -41,6 +41,11 @@ class Comment
      */
     private $created_at;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Comment::class, cascade={"persist", "remove"})
+     */
+    private $parent;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,5 +110,17 @@ class Comment
     public function __toString()
     {
         return $this->content;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
     }
 }

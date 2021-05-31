@@ -1,0 +1,26 @@
+<div class="card my-4">
+    <h5 class="card-header">Subscribe</h5>
+    <div class="card-body">
+        {{ form_start(form) }}
+        <div class="input-group">
+            {{ form_widget(form.email)}}
+            <span class="input-group-append">
+                {{ form_widget(form.subscribe) }}
+            </span>
+
+        </div>
+        <hr>
+
+        <ul>
+            {% for error in app.flashes("subscribe_errors")  %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+
+        {% for message in app.flashes("info")  %}
+            {{ message }}
+        {% endfor %}
+    </div>
+    {{ form_end(form) }}
+
+</div>
