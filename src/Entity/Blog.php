@@ -6,6 +6,7 @@ use App\Repository\BlogRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=BlogRepository::class)
@@ -22,6 +23,7 @@ class Blog
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Valid
      */
     private $title;
 
@@ -69,6 +71,11 @@ class Blog
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="blog")
      */
     private $comments;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $shared;
 
 
     public function __construct()
@@ -271,6 +278,18 @@ class Blog
     public function __toString()
     {
         return $this->getTitle();
+    }
+
+    public function getShared(): ?bool
+    {
+        return $this->shared;
+    }
+
+    public function setShared(bool $shared): self
+    {
+        $this->shared = $shared;
+
+        return $this;
     }
 }
 

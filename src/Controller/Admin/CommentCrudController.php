@@ -51,12 +51,9 @@ class CommentCrudController extends AbstractCrudController
         return  $this->getDoctrine()->getManager()->getRepository(Comment::class)->findSelfComments($this->getUser());
     }
 
-    /**
-     *
-     */
+
     public function reply(AdminContext $context)
     {
-
         $request = $context->getRequest();
 
         $parent =  $context->getEntity()->getInstance();
@@ -73,7 +70,6 @@ class CommentCrudController extends AbstractCrudController
 
             $em->persist($comment);
             $em->flush();
-
 
         }
 

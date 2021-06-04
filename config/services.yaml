@@ -37,5 +37,13 @@ services:
         tags:
             - {name: 'doctrine.event_subscriber'}
 
+#    mailer_alias:
+#        class: Symfony\Component\Mailer\Mailer
+
+    App\MessageHandler\NewsletterEmailHandler:
+        tags:
+            - { name: 'messenger.message_handler'}
+
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

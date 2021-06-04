@@ -3,6 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Blog;
+use App\Entity\Subscribers;
+use App\Message\NewsletterEmail;
+use App\Repository\SubscribersRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -20,10 +23,21 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 
 class BlogCrudController extends AbstractCrudController
 {
+    private $adminUrlGenerator;
+
+    public function __construct(AdminUrlGenerator $adminUrlGenerator)
+    {
+        $this->adminUrlGenerator = $adminUrlGenerator;
+    }
+
     public static function getEntityFqcn(): string
     {
         return Blog::class;
@@ -33,6 +47,7 @@ class BlogCrudController extends AbstractCrudController
     {
         $blog = new Blog();
         $blog->setAuthor($this->getUser());
+
         return $blog;
     }
 
@@ -68,9 +83,52 @@ class BlogCrudController extends AbstractCrudController
             AssociationField::new('comments')->hideOnForm(),
         ];
     }
+
     public function configureActions(Actions $actions): Actions
     {
+        $sendNewsletter = Action::new("sendNewsletter", "Send Newsletter")
+                            ->linkToCrudAction("sendNewsletter")
+                            ->displayIf(function (Blog $blog){
+                                return $blog->getShared() == 0;
+                            });
+
         return $actions
-            ->add(Crud::PAGE_INDEX, Action::DETAIL);
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, $sendNewsletter);
     }
+
+    /**
+     * @return Response
+     * @throws \Throwable
+     */
+    public function sendNewsletter(): Response
+    {
+        $adminContext = $this->get(AdminContextProvider::class);
+        $em = $this->getDoctrine()->getManager();
+        $blog = $adminContext->getContext()->getEntity()->getInstance();
+
+        $subscribers = $this->getDoctrine()->getManager()->getRepository(Subscribers::class)->findAll();
+        foreach ($subscribers as $subscriber) {
+            $messageBus = $this->get("message_bus");
+            $messageBus->dispatch(new NewsletterEmail($blog->getId(), $subscriber->getEmail()));
+
+            $blog->setShared(1);
+
+            $em->persist($blog);
+            $em->flush();
+
+        }
+
+        $blogIndexUrl = $this->adminUrlGenerator->setAction("index")->generateUrl();
+        return $this->redirect($blogIndexUrl);
+    }
+
+    public static function getSubscribedServices()
+    {
+        $services =  parent::getSubscribedServices();
+        $services['message_bus'] = MessageBusInterface::class;
+        return $services;
+    }
+
+
 }
