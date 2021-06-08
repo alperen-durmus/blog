@@ -19,32 +19,25 @@ class TagRepository extends ServiceEntityRepository
         parent::__construct($registry, Tag::class);
     }
 
-    // /**
-    //  * @return Tag[] Returns an array of Tag objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    public function getBlogCountByTag() {
 
-    /*
-    public function findOneBySomeField($value): ?Tag
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
+    //        $sql = "
+    //            SELECT
+    //                bc.name,
+    //                count(bc.id)
+    //            FROM
+    //                blog_category AS bc
+    //            INNER JOIN
+    //                blog_blog_category AS bbc ON
+    //                    bc.id = bbc.blog_category_id
+    //            GROUP BY
+    //                bbc.blog_category_id";
+
+        return $this->createQueryBuilder("t")
+            ->select("t.name, count(t.id) AS count")
+            ->innerJoin("t.blogs", "b")
+            ->groupBy("t.id")
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -42,9 +44,20 @@ class Comment
     private $created_at;
 
     /**
-     * @ORM\OneToOne(targetEntity=Comment::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Comment::class, inversedBy="parent_id")
      */
-    private $parent;
+    private $comment;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="comment")
+     */
+    private $parent_id;
+
+    public function __construct()
+    {
+        $this->parent_id = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -112,15 +125,46 @@ class Comment
         return $this->content;
     }
 
-    public function getParent(): ?self
+    public function getComment(): ?self
     {
-        return $this->parent;
+        return $this->comment;
     }
 
-    public function setParent(?self $parent): self
+    public function setComment(?self $comment): self
     {
-        $this->parent = $parent;
+        $this->comment = $comment;
 
         return $this;
     }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getParentId(): Collection
+    {
+        return $this->parent_id;
+    }
+
+    public function addParentId(self $parentId): self
+    {
+        if (!$this->parent_id->contains($parentId)) {
+            $this->parent_id[] = $parentId;
+            $parentId->setComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParentId(self $parentId): self
+    {
+        if ($this->parent_id->removeElement($parentId)) {
+            // set the owning side to null (unless already changed)
+            if ($parentId->getComment() === $this) {
+                $parentId->setComment(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

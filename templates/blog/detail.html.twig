@@ -21,10 +21,11 @@
         {{ blog.content|raw }}
         <hr />
         <!-- Comments form-->
-        <div class="card my-4">
+
+        <div class="card my-4" id="reply">
             <h5 class="card-header">Leave a Comment:</h5>
             <div class="card-body">
-                <form action="{{ path('blog_detail', {id: blog.id}) }}" method="POST">
+                <form action="{{ path('blog_detail', {id: blog.id}) }}" method="POST" id="commentForm">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Name Surname" name="owner" />
                     </div>
@@ -43,15 +44,16 @@
         </div>
         {% if comments %}
             {% for comment in comments  %}
-                {% if comment.parent == null %}
+                {% if comment.comment == null %}
                     {% set parent_id = comment.id %}
                     <div class="media mb-4">
                         <img class="d-flex mr-3 rounded-circle" src="https://via.placeholder.com/50x50" alt="..." />
+
                         <div class="media-body">
                             <h5 class="mt-0">{{ comment.owner }}</h5>
                             {{ comment.content }}
                             {% for nested in nested_comments %}
-                                {% if nested.parent == comment %}
+                                {% if nested.comment == comment %}
                                 <div class="media mt-4">
                                     <img class="d-flex mr-3 rounded-circle" src="https://via.placeholder.com/50x50" alt="..." />
                                     <div class="media-body">
@@ -61,6 +63,9 @@
                                 </div>
                                 {% endif %}
                             {% endfor %}
+                        </div>
+                        <div class="media-footer">
+                            <a class="reply" href="{{ path('blog_detail', {'id' : blog.id}) }}#reply" data-parent-comment="{{ parent_id }}">Reply</a>
                         </div>
                     </div>
                 {% endif %}

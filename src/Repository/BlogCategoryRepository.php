@@ -19,32 +19,25 @@ class BlogCategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, BlogCategory::class);
     }
 
-    // /**
-    //  * @return BlogCategory[] Returns an array of BlogCategory objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    public function getBlogCountByCategory() {
 
-    /*
-    public function findOneBySomeField($value): ?BlogCategory
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
+//        $sql = "
+//            SELECT
+//                bc.name,
+//                count(bc.id)
+//            FROM
+//                blog_category AS bc
+//            INNER JOIN
+//                blog_blog_category AS bbc ON
+//                    bc.id = bbc.blog_category_id
+//            GROUP BY
+//                bbc.blog_category_id";
+
+        return $this->createQueryBuilder("bc")
+            ->select("bc.name, count(bc.id) AS count")
+            ->innerJoin("bc.blogs", "b")
+            ->groupBy("bc.id")
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }

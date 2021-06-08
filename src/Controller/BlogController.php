@@ -9,6 +9,7 @@ use App\Repository\BlogRepository;
 use App\Repository\CommentRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,20 +24,19 @@ class BlogController extends AbstractController
     {
         $blogs = $blogRepository->findBy(["status" => 1], ['created_at' => 'DESC']);
 
-        $logger->info("q");
         return $this->render('blog/index.html.twig', [
             'blogs' => $blogs,
             'title' => "All Posts",
-
         ]);
     }
 
     /**
-     * @Route("/post/{id}", name="blog_detail")
+     * @Route("/post/{id}", name="blog_detail", requirements={"id"="\d+"})
      */
-    public function detail($id, Blog $blog, CommentRepository $commentRepository, Request $request, ValidatorInterface $validator): Response
+    public function detail(Blog $blog, CommentRepository $commentRepository, Request $request, ValidatorInterface $validator): Response
     {
         $comments = $commentRepository->findBy(["blog" => $blog]);
+
         $nested_comments = $commentRepository->getNestedComments();
 
         $response_data = [
@@ -46,6 +46,9 @@ class BlogController extends AbstractController
             'nested_comments' => $nested_comments,
             'errors' => false,
         ];
+
+        $parent_id = $request->query->get("comment") ?? 0;
+        $parent_comment = $commentRepository->find($parent_id);
 
         if ($_POST) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -57,6 +60,7 @@ class BlogController extends AbstractController
             $comment->setOwner($owner);
             $comment->setContent($content);
             $comment->setBlog($blog);
+            $comment->setComment($parent_comment ?? null);
 
             $errors = $validator->validate($comment);
             if (count($errors) > 0) {
@@ -64,7 +68,7 @@ class BlogController extends AbstractController
             } else {
                 $entityManager->persist($comment);
                 $entityManager->flush();
-                return $this->redirectToRoute("blog_detail", ["id" => $id]);
+                return $this->redirectToRoute("blog_detail", ["id" => $blog->getId()]);
             }
         }
 
@@ -72,7 +76,7 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/posts/category/{id}", name="category")
+     * @Route("/posts/category/{id}", name="category", requirements={"page"="\d+"})
      */
     public function category(BlogCategory $category): Response
     {
@@ -89,13 +93,9 @@ class BlogController extends AbstractController
      */
     public function search(BlogRepository $blogRepository, Request $request, ValidatorInterface $validator): Response
     {
-
-        $searchKey = $request->request->get("searchKey");
-
-        $error = $validator->validate($searchKey);
-        if (!$error) {
-            $blog = $blogRepository->findByTitleOrContentField($searchKey);
-        }
+//        $searchKey = $request->request->get("searchKey");
+//
+//        $blog = $blogRepository->findByTitleOrContentField($searchKey);
 
         return $this->render('blog/index.html.twig', [
             'blogs' => $blog ?? [],
@@ -104,6 +104,21 @@ class BlogController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/comment/reply/{id}", name="reply", methods={"POST"})
+     */
+    public function reply(Comment $comment, Request $request) {
+
+        $all = $request->request->all();
+
+        $response = new JsonResponse(["owner" => $comment->getOwner(), "parent_id" => $comment->getId()]);
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+
+
+        return $response;
+    }
 
 
 

@@ -8,10 +8,14 @@ use App\Entity\Comment;
 use App\Entity\Log;
 use App\Entity\Tag;
 use App\Entity\User;
+use App\Repository\BlogCategoryRepository;
+use App\Repository\BlogRepository;
+use App\Repository\TagRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,14 +27,32 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         $blog = $this->getDoctrine()->getRepository(Blog::class)->count([]);
-        $comment = $this->getDoctrine()->getRepository(Comment::class)->findBy(["parent" => null]);
+        $comment = $this->getDoctrine()->getRepository(Comment::class)->count([]);
         $author = $this->getDoctrine()->getRepository(User::class)->count([]);
 
         return $this->render('bundles/EasyAdminBundle/dashboard.html.twig', [
             "blog" => $blog,
-            "comment" => count($comment),
+            "comment" => $comment,
             "author" => $author,
         ]);
+    }
+
+    /**
+     * @return Response
+     * @Route("/admin/get-dashboard-data")
+     */
+    public function getDashboardData (BlogCategoryRepository $blogCategoryRepository, TagRepository $tagRepository) {
+        $category = $blogCategoryRepository->getBlogCountByCategory();
+        $tag = $tagRepository->getBlogCountByTag();
+
+        $data = [
+            "category" => $category,
+            "tag" => $tag,
+        ];
+        $response = new JsonResponse($data);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     public function configureDashboard(): Dashboard
@@ -44,7 +66,9 @@ class DashboardController extends AbstractDashboardController
     public function configureAssets(): Assets
     {
         return parent::configureAssets()
-            ->addCssFile("css/admin.css");
+            ->addCssFile("css/admin.css")
+            ->addJsFile("js/chart.js")
+            ->addJsFile("js/scripts.js");
     }
 
     public function configureMenuItems(): iterable

@@ -23,7 +23,6 @@ class Blog
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Valid
      */
     private $title;
 
@@ -75,7 +74,7 @@ class Blog
     /**
      * @ORM\Column(type="boolean")
      */
-    private $shared;
+    private $shared = 0;
 
 
     public function __construct()

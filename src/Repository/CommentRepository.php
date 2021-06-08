@@ -29,14 +29,14 @@ class CommentRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->leftJoin("c.blog", "b")
             ->andWhere('b.author = :val')
-            ->andWhere('c.parent IS NULL')
+            ->andWhere('c.comment IS NULL')
             ->setParameter('val', $value)
             ->orderBy('c.id', 'ASC');
     }
 
     public function getNestedComments() {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.parent > 0')
+            ->andWhere('c.comment > 0')
             ->getQuery()
             ->getResult();
     }

@@ -66,7 +66,7 @@ class CommentCrudController extends AbstractCrudController
             $comment->setBlog($parent->getBlog());
             $comment->setOwner($this->getUser()->getUsername());
             $comment->setContent($content);
-            $comment->setParent($parent);
+            $comment->setComment($parent);
 
             $em->persist($comment);
             $em->flush();

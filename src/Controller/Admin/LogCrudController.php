@@ -7,6 +7,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class LogCrudController extends AbstractCrudController
 {
@@ -22,14 +25,14 @@ class LogCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_INDEX, Action::NEW);
     }
 
-    /*
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            TextField::new('Action'),
+            TextField::new('detail'),
+            DateTimeField::new('createdAt'),
+
         ];
     }
-    */
+
 }
