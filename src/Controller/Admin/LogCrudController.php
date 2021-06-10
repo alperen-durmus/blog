@@ -29,8 +29,8 @@ class LogCrudController extends AbstractCrudController
     {
         return [
             TextField::new('Action'),
-            TextField::new('detail'),
-            DateTimeField::new('createdAt'),
+            TextField::new('Detail'),
+            DateTimeField::new('Created At'),
 
         ];
     }

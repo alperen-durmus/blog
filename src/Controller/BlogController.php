@@ -89,17 +89,17 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/blog/search", name="search", methods={"POST"})
+     * @Route("/blog/search", name="blog_search", methods={"POST"})
      */
     public function search(BlogRepository $blogRepository, Request $request, ValidatorInterface $validator): Response
     {
-        $searchKey = $request->request->get("searchKey");
+        $searchItems = $request->request->get("search");
 
-//        $blog = $blogRepository->findByTitleOrContentField($searchKey);
+        $blogs = $blogRepository->findByTitleOrContentField($searchItems['search']);
 
         return $this->render('blog/index.html.twig', [
-            'blogs' => $blog ?? [],
-            'title' => $searchKey,
+            'blogs' => $blogs ?? [],
+            'title' => $searchItems['search'],
             'error' => $error ?? [],
         ]);
     }

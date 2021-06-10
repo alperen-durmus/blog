@@ -30,7 +30,7 @@ class BlogRepository extends ServiceEntityRepository
             ->where("b.title LIKE :val")
             ->orWhere("b.content LIKE :val")
             ->andWhere("b.status = 1")
-            ->setParameter('val', "%$value%")
+            ->setParameter('val', "%".$value."%")
             ->orderBy("b.created_at", "desc")
             ->getQuery()
             ->getResult();

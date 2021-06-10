@@ -1,10 +1,8 @@
 <div class="col-md-4">
     <!-- Search widget-->
     {{ render(controller('App\\Controller\\SearchController::index')) }}
-
     <!-- Categories widget-->
     {{ render(controller('App\\Controller\\CategoryController::getCategories')) }}
     <!-- Side widget-->
     {{ render(controller('App\\Controller\\SubscribeController::index')) }}
-
 </div>
