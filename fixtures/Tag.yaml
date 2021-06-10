@@ -1,0 +1,5 @@
+# fixtures/Tag.yaml
+
+App\Entity\Tag:
+  tag_{1..10}:
+    name: <word()>

@@ -1,0 +1,21 @@
+# fixtures/User.yaml
+
+parameters:
+  password: "$argon2id$v=19$m=65536,t=4,p=1$vWQoSkKaDVVahZaBs/gfBA$Q+Z7w82rJbwek/V3ZQN9/oph6o4KICAL46qR2Otr3MI"
+  role_admin:
+      - "ROLE_ADMIN"
+      - "ROLE_USER"
+  role_user:
+      - "ROLE_USER"
+
+App\Entity\User:
+  user0:
+    username: admin
+    roles: '<{role_admin}>'
+    password: '<{password}>'
+
+  user_{1..3}:
+    username: <username()>
+    roles: '<{role_user}>'
+    password: '<{password}>'
+

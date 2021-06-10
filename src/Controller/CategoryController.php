@@ -11,7 +11,8 @@ class CategoryController extends AbstractController
 {
     public function getCategories(): Response
     {
-        $categories = $this->getDoctrine()->getRepository(BlogCategory::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(BlogCategory::class)->getCategoriesExistBlog();
+
 
         return $this->render(
             'category/index.html.twig',

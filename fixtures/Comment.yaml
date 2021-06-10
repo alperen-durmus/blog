@@ -1,0 +1,7 @@
+# fixtures/Comment.yaml
+
+App\Entity\Comment:
+  comment_{1..40}:
+    blog: '@blog_*'
+    content:  <text(10)>
+    owner: <name()>

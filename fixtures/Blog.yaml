@@ -1,0 +1,16 @@
+# fixtures/Blog.yaml
+parameters:
+  image: "Screenshot from 2021-06-03 10-55-28.png"
+
+App\Entity\Blog:
+  blog_{1..20}:
+    title: <text(100)>
+    content: <text(1000)>
+    author: '@user_*'
+    status: <boolean()>
+    image:  '<{image}>'
+    shared: <boolean()>
+    categories:
+      - '@category_*'
+    tags:
+      - '@tag_*'

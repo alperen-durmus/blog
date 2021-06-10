@@ -41,13 +41,16 @@ class DashboardController extends AbstractDashboardController
      * @return Response
      * @Route("/admin/get-dashboard-data")
      */
-    public function getDashboardData (BlogCategoryRepository $blogCategoryRepository, TagRepository $tagRepository) {
+    public function getDashboardData (BlogCategoryRepository $blogCategoryRepository, TagRepository $tagRepository, BlogRepository $blogRepository) {
         $category = $blogCategoryRepository->getBlogCountByCategory();
         $tag = $tagRepository->getBlogCountByTag();
+        $user = $blogRepository->getBlogCountByUser();
+
 
         $data = [
             "category" => $category,
             "tag" => $tag,
+            "user" => $user
         ];
         $response = new JsonResponse($data);
         $response->headers->set('Content-Type', 'application/json');
@@ -87,6 +90,8 @@ class DashboardController extends AbstractDashboardController
                 yield MenuItem::linkToCrud('Authors', 'fas fa-user-edit', User::class);
                 yield MenuItem::linkToCrud('Log', 'fas fa-clipboard-list', Log::class);
             }
+            yield MenuItem::linkToRoute("View", "fa fa-home", "blog");
+
     }
     
 }

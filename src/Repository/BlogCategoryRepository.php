@@ -19,6 +19,9 @@ class BlogCategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, BlogCategory::class);
     }
 
+    /**
+     * @return int|mixed|string
+     */
     public function getBlogCountByCategory() {
 
 //        $sql = "
@@ -37,6 +40,13 @@ class BlogCategoryRepository extends ServiceEntityRepository
             ->select("bc.name, count(bc.id) AS count")
             ->innerJoin("bc.blogs", "b")
             ->groupBy("bc.id")
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getCategoriesExistBlog() {
+        return $this->createQueryBuilder("c")
+            ->innerJoin("c.blogs", "b")
             ->getQuery()
             ->getResult();
     }

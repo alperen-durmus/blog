@@ -80,7 +80,8 @@ class BlogCrudController extends AbstractCrudController
             ArrayField::new('categories')->hideOnForm(),
             AssociationField::new('tags')->onlyOnForms(),
             ArrayField::new('tags')->hideOnForm(),
-            AssociationField::new('comments')->hideOnForm(),
+            AssociationField::new('comments')->onlyOnIndex(),
+            ArrayField::new('comments')->onlyOnDetail()
         ];
     }
 

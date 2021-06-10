@@ -57,24 +57,41 @@ $(".reply").click(function(e) {
 $(function () {
     renderPieChart("category")
     renderPieChart("tag")
-})
 
-function renderPieChart(type) {
-        $.getJSON(`${host}/admin/get-dashboard-data`,  async function(response) {
-        let series = await response[type].map(d => d.count)
-        let labels = await response[type].map(d => d.name)
-        let  options = {
-            series: series,
-            labels: labels,
+    function renderPieChart(type) {
+            $.getJSON(`${host}/admin/get-dashboard-data`,  async function(response) {
+                let series = await response[type].map(d => d.count)
+                let labels = await response[type].map(d => d.name)
+                let  options = {
+                    series: series,
+                    labels: labels,
+                    noData: {
+                        text: "no data yet",
+                    },
+                    chart: {
+                        type: 'pie',
+                    },
+                }
+
+            let chart = new ApexCharts(document.querySelector(`#${type}Chart`), options);
+            chart.render();
+        });
+    }
+
+
+    $.getJSON(`${host}/admin/get-dashboard-data`,  async function(response) {
+        console.log(response.user)
+        let chart = new ApexCharts(document.querySelector(`#userChart`), {
+            series: [{
+                data: response.user,
+            }],
             noData: {
                 text: "no data yet",
             },
             chart: {
-                type: 'pie',
+                type: 'bar',
             },
-        }
-
-        let chart = new ApexCharts(document.querySelector(`#${type}Chart`), options);
+        });
         chart.render();
-    });
-}
+    })
+})

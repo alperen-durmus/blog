@@ -42,4 +42,16 @@ class BlogRepository extends ServiceEntityRepository
             ->setParameter('user', $user)
             ->orderBy("b.created_at","desc");
     }
+
+    # SELECT u.username, COUNT(b.id) FROM blog AS b INNER JOIN user AS u ON u.id = b.author_id GROUP BY u.id
+
+    public function getBlogCountByUser () {
+        return $this->createQueryBuilder('b')
+            ->select("a.username AS x, COUNT(b.id) AS y")
+            ->innerJoin("b.author", "a")
+            ->groupBy("a.id")
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

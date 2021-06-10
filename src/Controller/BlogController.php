@@ -93,8 +93,8 @@ class BlogController extends AbstractController
      */
     public function search(BlogRepository $blogRepository, Request $request, ValidatorInterface $validator): Response
     {
-//        $searchKey = $request->request->get("searchKey");
-//
+        $searchKey = $request->request->get("searchKey");
+
 //        $blog = $blogRepository->findByTitleOrContentField($searchKey);
 
         return $this->render('blog/index.html.twig', [
