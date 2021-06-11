@@ -15,10 +15,18 @@
 
         <hr />
         <!-- Preview image-->
-        <img class="img-fluid rounded" src="{{ asset('image/blog/' ~ blog.image) }}" alt="..." />
-        <hr />
+        {% if blog.image %}
+            <img class="img-fluid rounded" src="{{ asset('image/blog/' ~ blog.image) }}" alt="..." />
+            <hr />
+        {% endif %}
         <!-- Post content-->
         {{ blog.content|raw }}
+        <hr />
+
+        {% for tag in blog.tags %}
+            <span  class="badge badge-primary">{{ tag }}</span>
+        {% endfor %}
+
         <hr />
         <!-- Comments form-->
 

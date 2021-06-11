@@ -78,7 +78,6 @@ class BlogCrudController extends AbstractCrudController
             TextField::new('title'),
             TextEditorField::new('content'),
             ImageField::new('image')
-                ->setRequired($pageName !== "edit")
                 ->setUploadDir("public/image/blog/")
                 ->setBasePath("/image/blog/")
                 ->setUploadedFileNamePattern('[randomhash].[extension]')

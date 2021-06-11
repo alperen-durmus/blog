@@ -15,7 +15,9 @@
 
 		<!-- Blog post-->
 			<div class="card mb-4">
-				<img class="card-img-top" src="{{ asset("image/blog/" ~ blog.image ) }}" alt="Card image cap"/>
+				{% if blog.image %}
+					<img class="card-img-top" src="{{ asset("image/blog/" ~ blog.image ) }}" alt="Card image cap"/>
+				{% endif %}
 				<div class="card-body">
 					<h2 class="card-title">{{blog.title}}</h2>
 					<p class="card-text">{{blog.content|striptags|slice(0, 300) }}</p>
