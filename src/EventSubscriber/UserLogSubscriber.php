@@ -3,7 +3,9 @@
 namespace App\EventSubscriber;
 
 
+use App\Entity\Comment;
 use App\Entity\Log;
+use App\Entity\Subscribers;
 use App\Entity\User;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -34,14 +36,14 @@ class UserLogSubscriber implements EventSubscriber
 
     public function postPersist(LifecycleEventArgs $args)
     {
-        if (!$this->is_entity_log($args)) {
+        if (!$this->is_necessary_entity($args)) {
             $table = $args->getEntityManager()->getClassMetadata(get_class($args->getEntity()))->getTableName();
             $user = $this->getUser();
             $datetime = new \DateTime();
 
             $this->logger->info("Added new {table} by {username} at {datetime}", [
                 "table" => $table,
-                "username" => $user ? $user->getUsername() : false,
+                "username" => $user ? $user->getUsername() : "anonym",
                 "datetime" => $datetime->format("Y-m-d H:i:s"),
                 "action" => "add"
             ]);
@@ -50,7 +52,7 @@ class UserLogSubscriber implements EventSubscriber
 
     public function postRemove(LifecycleEventArgs $args) {
 
-        if (!$this->is_entity_log($args)) {
+        if (!$this->is_necessary_entity($args)) {
             $table = $args->getEntityManager()->getClassMetadata(get_class($args->getEntity()))->getTableName();
             $user = $this->getUser();
             $datetime = new \DateTime();
@@ -66,7 +68,7 @@ class UserLogSubscriber implements EventSubscriber
 
     public function postUpdate(LifecycleEventArgs $args) {
 
-        if (!$this->is_entity_log($args)) {
+        if ($this->is_necessary_entity($args)) {
             $table = $args->getEntityManager()->getClassMetadata(get_class($args->getEntity()))->getTableName();
             $user = $this->getUser();
             $datetime = new \DateTime();
@@ -84,12 +86,17 @@ class UserLogSubscriber implements EventSubscriber
      * @param $args
      * @return bool
      */
-    private function is_entity_log($args): bool
+    private function is_necessary_entity($args): bool
     {
-        if ($args->getEntity() instanceof Log) {
-            return true;
+        if (
+            $args->getEntity() instanceof Log &&
+            $args->getEntity() instanceof Comment &&
+            $args->getEntity() instanceof Subscribers
+        )
+        {
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**
