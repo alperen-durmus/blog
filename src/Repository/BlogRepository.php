@@ -52,6 +52,7 @@ class BlogRepository extends ServiceEntityRepository
             ->groupBy("a.id")
             ->getQuery()
             ->getResult()
+
             ;
     }
 }

@@ -95,7 +95,9 @@ class BlogController extends AbstractController
     {
         $searchItems = $request->request->get("search");
 
+
         $blogs = $blogRepository->findByTitleOrContentField($searchItems['search']);
+
 
         return $this->render('blog/index.html.twig', [
             'blogs' => $blogs ?? [],
